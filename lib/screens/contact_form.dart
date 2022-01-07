@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:Bytebank/models/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ContactForm extends StatefulWidget {
-  const ContactForm({Key? key}) : super(key: key);
+  ContactForm({Key? key}) : super(key: key);
+
+  final TextEditingController _controllerNome = TextEditingController();
+  final TextEditingController _controllerConta = TextEditingController();
 
   @override
   _ContactFormState createState() => _ContactFormState();
@@ -22,6 +26,7 @@ class _ContactFormState extends State<ContactForm> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: TextField(
+              controller: widget._controllerNome,
               decoration: InputDecoration(
                 labelText: 'Full name',
               ),
@@ -33,6 +38,7 @@ class _ContactFormState extends State<ContactForm> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: TextField(
+              controller: widget._controllerConta,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Account Number',
@@ -46,8 +52,14 @@ class _ContactFormState extends State<ContactForm> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: SizedBox(
               width: double.maxFinite,
-              child: ElevatedButton(
-                onPressed: () {},
+              child: RaisedButton(
+                onPressed: () {
+                  final String name = widget._controllerNome.text;
+                  final int account =
+                      int.tryParse(widget._controllerConta.text)!;
+                  final Contact c = Contact(name, account);
+                  Navigator.pop(context, c);
+                },
                 child: Text(
                   'Create',
                   style: TextStyle(
