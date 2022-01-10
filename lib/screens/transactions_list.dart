@@ -1,11 +1,12 @@
 import 'package:Bytebank/components/centered_message.dart';
 import 'package:Bytebank/components/progress.dart';
-import 'package:Bytebank/http/webclient.dart';
+import 'package:Bytebank/http/webclients/transaction_webclient.dart';
 import 'package:Bytebank/models/transaction.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsList extends StatelessWidget {
   final List<Transaction> transactions = [];
+  final TransactionWebclient _webclient = TransactionWebclient();
 
   TransactionsList({Key? key}) : super(key: key);
 
@@ -16,7 +17,7 @@ class TransactionsList extends StatelessWidget {
         title: const Text('Transactions'),
       ),
       body: FutureBuilder<List<Transaction>>(
-        future: findAll(),
+        future: _webclient.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -27,6 +28,7 @@ class TransactionsList extends StatelessWidget {
               break;
             case ConnectionState.done:
               if (snapshot.hasData) {
+                transactions.addAll(snapshot.data as List<Transaction>);
                 if (transactions.isNotEmpty) {
                   return ListView.builder(
                     itemBuilder: (context, index) {
@@ -42,7 +44,7 @@ class TransactionsList extends StatelessWidget {
                             ),
                           ),
                           subtitle: Text(
-                            transaction.contact.account.toString(),
+                            transaction.contact.accountNumber.toString(),
                             style: const TextStyle(
                               fontSize: 16.0,
                             ),

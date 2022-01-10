@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:Bytebank/dao/contact_dao.dart';
-import 'package:Bytebank/database/app_database.dart';
 import 'package:Bytebank/models/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,7 +44,7 @@ class _ContactFormState extends State<ContactForm> {
               controller: widget._controllerConta,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: 'Account Number',
+                labelText: 'accountNumber Number',
               ),
               style: TextStyle(
                 fontSize: 24.0,
@@ -59,9 +58,9 @@ class _ContactFormState extends State<ContactForm> {
               child: RaisedButton(
                 onPressed: () {
                   final String name = widget._controllerNome.text;
-                  final int account =
+                  final int accountNumber =
                       int.tryParse(widget._controllerConta.text)!;
-                  final Contact c = Contact(0, name, account);
+                  final Contact c = Contact(0, name, accountNumber);
                   contactDao.save(c).then((id) => Navigator.pop(context));
                 },
                 child: Text(
