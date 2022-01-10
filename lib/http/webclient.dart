@@ -8,9 +8,11 @@ import 'package:http_interceptor/http_interceptor.dart';
 
 Future<List<Transaction>> findAll() async {
   Client client = InterceptedClient.build(interceptors: [LoggingInterceptor()]);
-  final Response r = await client.get(
-    Uri.http('192.168.0.159:8080', 'transactions'),
-  );
+  final Response r = await client
+      .get(
+        Uri.http('192.168.0.159:8080', 'transactions'),
+      )
+      .timeout(const Duration(seconds: 5));
   List<dynamic> list = jsonDecode(r.body);
   List<Transaction> tlist = [];
   for (Map<String, dynamic> item in list) {
