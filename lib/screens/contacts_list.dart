@@ -23,17 +23,26 @@ class _ContactsListState extends State<ContactsList> {
       body: FutureBuilder(
         future: findAll(),
         builder: (context, snapshot) {
-          if (snapshot.data == null) {
-            return const Center(child: CircularProgressIndicator());
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return const Center(child: CircularProgressIndicator());
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              final List<Contact> contacts = snapshot.data as List<Contact>;
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  final Contact c = contacts[index];
+                  return ItemContact(c: c);
+                },
+                itemCount: contacts.length,
+              );
+            default:
+              break;
           }
-          final List<Contact> contacts = snapshot.data as List<Contact>;
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              final Contact c = contacts[index];
-              return ItemContact(c: c);
-            },
-            itemCount: contacts.length,
-          );
+          return const Center();
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -44,9 +53,7 @@ class _ContactsListState extends State<ContactsList> {
               builder: (context) => ContactForm(),
             ),
           ).then((value) {
-            setState(() {
-              // widget.contacts.add(ItemContact(c: value));
-            });
+            setState(() {});
           });
         },
         child: const Icon(Icons.add),
