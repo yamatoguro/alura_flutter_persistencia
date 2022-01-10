@@ -1,20 +1,18 @@
 // ignore_for_file: no_logic_in_create_state
 
+import 'package:Bytebank/database/app_database.dart';
 import 'package:Bytebank/models/contact.dart';
 import 'package:Bytebank/screens/contact_form.dart';
 import 'package:flutter/material.dart';
 
 class ContactsList extends StatefulWidget {
-  ContactsList({Key? key}) : super(key: key);
-  List contacts = [];
+  const ContactsList({Key? key}) : super(key: key);
   @override
-  State<ContactsList> createState() => _ContactsListState(contacts);
+  State<ContactsList> createState() => _ContactsListState();
 }
 
 class _ContactsListState extends State<ContactsList> {
-  _ContactsListState(this.contacts);
-
-  final List contacts;
+  _ContactsListState();
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +20,21 @@ class _ContactsListState extends State<ContactsList> {
       appBar: AppBar(
         title: const Text('Contacts'),
       ),
-      body: ListView(
-        children: [...contacts],
+      body: FutureBuilder(
+        future: findAll(),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final List<Contact> contacts = snapshot.data as List<Contact>;
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              final Contact c = contacts[index];
+              return ItemContact(c: c);
+            },
+            itemCount: contacts.length,
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -34,7 +45,7 @@ class _ContactsListState extends State<ContactsList> {
             ),
           ).then((value) {
             setState(() {
-              widget.contacts.add(ItemContact(c: value));
+              // widget.contacts.add(ItemContact(c: value));
             });
           });
         },
