@@ -4,4 +4,14 @@ class Contact {
   final int accountNumber;
 
   Contact(this.id, this.name, this.accountNumber);
+
+  Contact.fromJson(Map<String, dynamic> json)
+      : id = json['id'] ?? 0,
+        name = json['name'],
+        accountNumber = json['accountNumber'];
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'account': accountNumber,
+      };
 }
