@@ -1,5 +1,6 @@
 // ignore_for_file: no_logic_in_create_state
 
+import 'package:Bytebank/components/progress.dart';
 import 'package:Bytebank/dao/contact_dao.dart';
 import 'package:Bytebank/models/contact.dart';
 import 'package:Bytebank/screens/contact_form.dart';
@@ -29,7 +30,7 @@ class _ContactsListState extends State<ContactsList> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return const Center(child: CircularProgressIndicator());
+              return const Progress();
             case ConnectionState.active:
               break;
             case ConnectionState.done:
