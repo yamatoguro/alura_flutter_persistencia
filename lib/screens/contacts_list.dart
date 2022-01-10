@@ -1,9 +1,11 @@
 // ignore_for_file: no_logic_in_create_state
 
+import 'package:Bytebank/components/centered_message.dart';
 import 'package:Bytebank/components/progress.dart';
 import 'package:Bytebank/dao/contact_dao.dart';
 import 'package:Bytebank/models/contact.dart';
 import 'package:Bytebank/screens/contact_form.dart';
+import 'package:Bytebank/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
 
 class ContactsList extends StatefulWidget {
@@ -35,13 +37,30 @@ class _ContactsListState extends State<ContactsList> {
               break;
             case ConnectionState.done:
               final List<Contact> contacts = snapshot.data as List<Contact>;
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  final Contact c = contacts[index];
-                  return ItemContact(c: c);
-                },
-                itemCount: contacts.length,
-              );
+              if (contacts.isNotEmpty) {
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    final Contact c = contacts[index];
+                    return ItemContact(
+                      c: c,
+                      onClick: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TransactionForm(c),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  itemCount: contacts.length,
+                );
+              } else {
+                return const CenteredMessage(
+                  'No Contacts found!',
+                  icon: Icons.warning,
+                );
+              }
             default:
               break;
           }
@@ -66,21 +85,33 @@ class _ContactsListState extends State<ContactsList> {
 }
 
 class ItemContact extends StatelessWidget {
-  const ItemContact({Key? key, required this.c}) : super(key: key);
+  const ItemContact({
+    Key? key,
+    required this.c,
+    required this.onClick,
+  }) : super(key: key);
 
   final Contact c;
+  final Function onClick;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        title: Text(
-          c.name,
-          style: TextStyle(fontSize: 24.0),
-        ),
-        subtitle: Text(
-          c.account.toString(),
-          style: TextStyle(fontSize: 16.0),
+    return Material(
+      child: InkWell(
+        onTap: () {
+          onClick();
+        },
+        child: Card(
+          child: ListTile(
+            title: Text(
+              c.name,
+              style: const TextStyle(fontSize: 24.0),
+            ),
+            subtitle: Text(
+              c.accountNumber.toString(),
+              style: const TextStyle(fontSize: 16.0),
+            ),
+          ),
         ),
       ),
     );
