@@ -57,7 +57,7 @@ class _ContactFormState extends State<ContactForm> {
                   final String name = widget._controllerNome.text;
                   final int account =
                       int.tryParse(widget._controllerConta.text)!;
-                  final Contact c = Contact(name, account);
+                  final Contact c = Contact(0, name, account);
                   Navigator.pop(context, c);
                 },
                 child: Text(
