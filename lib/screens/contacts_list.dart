@@ -1,6 +1,6 @@
 // ignore_for_file: no_logic_in_create_state
 
-import 'package:Bytebank/database/app_database.dart';
+import 'package:Bytebank/dao/contact_dao.dart';
 import 'package:Bytebank/models/contact.dart';
 import 'package:Bytebank/screens/contact_form.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,8 @@ class ContactsList extends StatefulWidget {
 class _ContactsListState extends State<ContactsList> {
   _ContactsListState();
 
+  ContactDao contactDao = ContactDao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +23,7 @@ class _ContactsListState extends State<ContactsList> {
         title: const Text('Contacts'),
       ),
       body: FutureBuilder(
-        future: findAll(),
+        future: contactDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:

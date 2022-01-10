@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:Bytebank/dao/contact_dao.dart';
 import 'package:Bytebank/database/app_database.dart';
 import 'package:Bytebank/models/contact.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ class ContactForm extends StatefulWidget {
 }
 
 class _ContactFormState extends State<ContactForm> {
+  ContactDao contactDao = ContactDao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +62,7 @@ class _ContactFormState extends State<ContactForm> {
                   final int account =
                       int.tryParse(widget._controllerConta.text)!;
                   final Contact c = Contact(0, name, account);
-                  save(c).then((id) => Navigator.pop(context));
+                  contactDao.save(c).then((id) => Navigator.pop(context));
                 },
                 child: Text(
                   'Create',
