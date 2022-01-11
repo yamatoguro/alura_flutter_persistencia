@@ -13,9 +13,7 @@ class TransactionWebclient {
     final Client client = InterceptedClient.build(
       interceptors: [LoggingInterceptor()],
     );
-    final Response response = await client
-        .get(Uri.parse(baseURL))
-        .timeout(const Duration(seconds: 5));
+    final Response response = await client.get(Uri.parse(baseURL));
     final List<dynamic> decodedJson = jsonDecode(response.body);
     final List<Transaction> transactions =
         decodedJson.map((e) => Transaction.fromJson(e)).toList();
@@ -32,16 +30,23 @@ class TransactionWebclient {
       },
       body: jsonEncode(t.toJson()),
     );
-    switch (r.statusCode) {
-      case 400:
-        throw Exception('There was an error submitting transaction');
-      case 401:
-        throw Exception('Authentication failed');
-      case 200:
-        Map<String, dynamic> resultJSON = jsonDecode(r.body);
-        return Transaction.fromJson(resultJSON);
-      default:
-        throw Exception('Unknown error');
+    if (r.statusCode == 200) {
+      Map<String, dynamic> resultJSON = jsonDecode(r.body);
+      return Transaction.fromJson(resultJSON);
     }
+
+    throw HttpException(_statusCodeResponses[r.statusCode]!);
   }
+
+  static final Map<int, String> _statusCodeResponses = {
+    0: 'Unknown error',
+    400: 'There was an error submitting transaction',
+    401: 'Authentication failed'
+  };
+}
+
+class HttpException implements Exception {
+  final String message;
+
+  HttpException(this.message);
 }

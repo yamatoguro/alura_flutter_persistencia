@@ -1,5 +1,7 @@
 // ignore_for_file: invalid_return_type_for_catch_error
 
+import 'dart:async';
+
 import 'package:Bytebank/components/response_dialog.dart';
 import 'package:Bytebank/components/transaction_auth_dialog.dart';
 import 'package:Bytebank/http/webclients/transaction_webclient.dart';
@@ -88,22 +90,30 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
-  void _save(Transaction t, String password, BuildContext context) {
-    _webclient.save(t, password, context).then(
-      (t) {
-        if (t != null) {
-          showDialog(
+  void _save(Transaction t, String password, BuildContext context) async {
+    final Transaction transaction = await _webclient
+        .save(t, password, context)
+        .catchError(
+          (e) => showDialog(
             context: context,
-            builder: (dialogContext) => SuccessDialog('Successful transaction'),
-          ).then((value) => Navigator.pop(context));
-        }
-      },
-    ).catchError(
-      (e) => showDialog(
+            builder: (dialogContext) => FailureDialog(e.message),
+          ),
+          test: (e) => e is HttpException,
+        )
+        .catchError(
+          (e) => showDialog(
+            context: context,
+            builder: (context) =>
+                FailureDialog('Timeout submitting transaction'),
+          ),
+          test: (e) => e is TimeoutException,
+        );
+    if (t != null) {
+      await showDialog(
         context: context,
-        builder: (dialogContext) => FailureDialog(e.message),
-      ),
-      test: (e) => e is Exception,
-    );
+        builder: (dialogContext) => SuccessDialog('Successful transaction'),
+      );
+      Navigator.pop(context);
+    }
   }
 }
