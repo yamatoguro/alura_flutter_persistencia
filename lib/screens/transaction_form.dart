@@ -1,3 +1,4 @@
+import 'package:Bytebank/components/transaction_auth_dialog.dart';
 import 'package:Bytebank/http/webclients/transaction_webclient.dart';
 import 'package:Bytebank/models/contact.dart';
 import 'package:Bytebank/models/transaction.dart';
@@ -58,17 +59,21 @@ class _TransactionFormState extends State<TransactionForm> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: SizedBox(
                   width: double.maxFinite,
-                  child: ElevatedButton(
+                  child: RaisedButton(
                     child: const Text('Transfer'),
                     onPressed: () {
-                      final double? value =
-                          double.tryParse(_valueController.text);
-                      final transactionCreated =
-                          Transaction(value!, widget.contact);
-                      _webclient.save(transactionCreated).then((t) =>
-                          (t != null)
-                              ? Navigator.pop(context)
-                              : debugPrint('Transaction not saved.'));
+                      showDialog(
+                        context: context,
+                        builder: (contextDialog) => TransactionAuthDialog(
+                          onConfirm: (password) {
+                            final double? value =
+                                double.tryParse(_valueController.text);
+                            final transactionCreated =
+                                Transaction(value!, widget.contact);
+                            _save(transactionCreated, password, context);
+                          },
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -78,5 +83,14 @@ class _TransactionFormState extends State<TransactionForm> {
         ),
       ),
     );
+  }
+
+  void _save(Transaction t, String password, BuildContext context) {
+    _webclient.save(t, password, context).then(
+      (t) {
+        debugPrint(t.toString());
+        Navigator.pop(context);
+      },
+    ).catchError((e) => debugPrint(e));
   }
 }

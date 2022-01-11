@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:Bytebank/components/dialog.dart';
 import 'package:Bytebank/http/interceptors/logging_interceptor.dart';
 import 'package:Bytebank/http/webclient.dart';
 import 'package:Bytebank/models/transaction.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http/http.dart';
 
@@ -20,16 +22,40 @@ class TransactionWebclient {
     return transactions;
   }
 
-  Future<Transaction> save(Transaction t) async {
+  Future<Transaction> save(
+      Transaction t, String password, BuildContext context) async {
     Response r = await client.post(
       Uri.parse(baseURL),
       headers: {
         'Content-type': 'application/json',
-        'password': '1000',
+        'password': password,
       },
       body: jsonEncode(t.toJson()),
     );
-    Map<String, dynamic> resultJSON = jsonDecode(r.body);
-    return Transaction.fromJson(resultJSON);
+    switch (r.statusCode) {
+      case 400:
+        showDialog(
+          context: context,
+          builder: (context) => const DialogCustom(
+            title: 'Error 400',
+            content: 'There was an error submitting transaction',
+          ),
+        );
+        throw Exception('Error 400: There was an error submitting transaction');
+      case 401:
+        showDialog(
+          context: context,
+          builder: (context) => const DialogCustom(
+            title: 'Error 401',
+            content: 'Authentication failed',
+          ),
+        );
+        throw Exception('Error 401: Authentication failed');
+      case 200:
+        Map<String, dynamic> resultJSON = jsonDecode(r.body);
+        return Transaction.fromJson(resultJSON);
+      default:
+        throw Exception('Unknown error');
+    }
   }
 }

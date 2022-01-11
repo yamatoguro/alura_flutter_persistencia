@@ -12,6 +12,6 @@ class Contact {
 
   Map<String, dynamic> toJson() => {
         'name': name,
-        'account': accountNumber,
+        'accountNumber': accountNumber,
       };
 }
