@@ -1,20 +1,20 @@
 // ignore_for_file: no_logic_in_create_state
 
+import 'package:Bytebank/dao/contact_dao.dart';
 import 'package:Bytebank/models/contact.dart';
 import 'package:Bytebank/screens/contact_form.dart';
 import 'package:flutter/material.dart';
 
 class ContactsList extends StatefulWidget {
-  ContactsList({Key? key}) : super(key: key);
-  List contacts = [];
+  const ContactsList({Key? key}) : super(key: key);
   @override
-  State<ContactsList> createState() => _ContactsListState(contacts);
+  State<ContactsList> createState() => _ContactsListState();
 }
 
 class _ContactsListState extends State<ContactsList> {
-  _ContactsListState(this.contacts);
+  _ContactsListState();
 
-  final List contacts;
+  ContactDao contactDao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +22,30 @@ class _ContactsListState extends State<ContactsList> {
       appBar: AppBar(
         title: const Text('Contacts'),
       ),
-      body: ListView(
-        children: [...contacts],
+      body: FutureBuilder(
+        future: contactDao.findAll(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return const Center(child: CircularProgressIndicator());
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              final List<Contact> contacts = snapshot.data as List<Contact>;
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  final Contact c = contacts[index];
+                  return ItemContact(c: c);
+                },
+                itemCount: contacts.length,
+              );
+            default:
+              break;
+          }
+          return const Center();
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -33,9 +55,7 @@ class _ContactsListState extends State<ContactsList> {
               builder: (context) => ContactForm(),
             ),
           ).then((value) {
-            setState(() {
-              widget.contacts.add(ItemContact(c: value));
-            });
+            setState(() {});
           });
         },
         child: const Icon(Icons.add),
