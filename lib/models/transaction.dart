@@ -1,13 +1,13 @@
 import 'contact.dart';
 
 class Transaction {
-  final double value;
+  final double? value;
   final Contact contact;
 
-  Transaction(
+  Transaction({
     this.value,
-    this.contact,
-  );
+    required this.contact,
+  });
 
   Transaction.fromJson(Map<String, dynamic> json)
       : value = json['value'],
