@@ -1,3 +1,6 @@
+// ignore_for_file: invalid_return_type_for_catch_error
+
+import 'package:Bytebank/components/response_dialog.dart';
 import 'package:Bytebank/components/transaction_auth_dialog.dart';
 import 'package:Bytebank/http/webclients/transaction_webclient.dart';
 import 'package:Bytebank/models/contact.dart';
@@ -68,8 +71,8 @@ class _TransactionFormState extends State<TransactionForm> {
                           onConfirm: (password) {
                             final double? value =
                                 double.tryParse(_valueController.text);
-                            final transactionCreated =
-                                Transaction(value!, widget.contact);
+                            final transactionCreated = Transaction(
+                                value: value, contact: widget.contact);
                             _save(transactionCreated, password, context);
                           },
                         ),
@@ -88,9 +91,19 @@ class _TransactionFormState extends State<TransactionForm> {
   void _save(Transaction t, String password, BuildContext context) {
     _webclient.save(t, password, context).then(
       (t) {
-        debugPrint(t.toString());
-        Navigator.pop(context);
+        if (t != null) {
+          showDialog(
+            context: context,
+            builder: (dialogContext) => SuccessDialog('Successful transaction'),
+          ).then((value) => Navigator.pop(context));
+        }
       },
-    ).catchError((e) => debugPrint(e));
+    ).catchError(
+      (e) => showDialog(
+        context: context,
+        builder: (dialogContext) => FailureDialog(e.message),
+      ),
+      test: (e) => e is Exception,
+    );
   }
 }

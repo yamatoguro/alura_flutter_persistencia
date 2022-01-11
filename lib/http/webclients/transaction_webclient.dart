@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:Bytebank/components/dialog.dart';
+import 'package:Bytebank/components/response_dialog.dart';
 import 'package:Bytebank/http/interceptors/logging_interceptor.dart';
 import 'package:Bytebank/http/webclient.dart';
 import 'package:Bytebank/models/transaction.dart';
@@ -34,23 +34,9 @@ class TransactionWebclient {
     );
     switch (r.statusCode) {
       case 400:
-        showDialog(
-          context: context,
-          builder: (context) => const DialogCustom(
-            title: 'Error 400',
-            content: 'There was an error submitting transaction',
-          ),
-        );
-        throw Exception('Error 400: There was an error submitting transaction');
+        throw Exception('There was an error submitting transaction');
       case 401:
-        showDialog(
-          context: context,
-          builder: (context) => const DialogCustom(
-            title: 'Error 401',
-            content: 'Authentication failed',
-          ),
-        );
-        throw Exception('Error 401: Authentication failed');
+        throw Exception('Authentication failed');
       case 200:
         Map<String, dynamic> resultJSON = jsonDecode(r.body);
         return Transaction.fromJson(resultJSON);
