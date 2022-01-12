@@ -111,11 +111,10 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void _save(Transaction t, String password, BuildContext context) async {
     try {
-      FocusScope.of(context).requestFocus(new FocusNode());
+      FocusScope.of(context).requestFocus(FocusNode());
       setState(() {
         _processing = true;
       });
-      await Future.delayed(const Duration(seconds: 5));
       Transaction tr = await _webclient.save(t, password, context);
       if (tr != null) {
         setState(() {
