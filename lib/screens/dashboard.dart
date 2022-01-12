@@ -1,4 +1,5 @@
 import 'package:Bytebank/screens/contacts_list.dart';
+import 'package:Bytebank/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
@@ -20,46 +21,97 @@ class Dashboard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Image.asset('assets/images/bytebank_logo.png'),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Material(
-              color: Colors.green[900],
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ContactsList(),
+          SizedBox(
+            height: 120,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                Row(
+                  children: [
+                    _FeatureItem(
+                      name: 'Transfer',
+                      icon: Icons.monetization_on,
+                      onClick: () => _showContactsList(context),
                     ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  height: 100,
-                  width: 150,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Icon(
-                        Icons.people,
-                        color: Colors.white,
-                        size: 24.0,
-                      ),
-                      Text(
-                        'Contacts',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                    ],
+                    _FeatureItem(
+                      name: 'Transaction Feed',
+                      icon: Icons.description,
+                      onClick: () => _showTransactionList(context),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showContactsList(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ContactsList(),
+      ),
+    );
+  }
+
+  _showTransactionList(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TransactionsList(),
+      ),
+    );
+  }
+}
+
+class _FeatureItem extends StatelessWidget {
+  const _FeatureItem({
+    Key? key,
+    required this.name,
+    required this.icon,
+    required this.onClick,
+  }) : super(key: key);
+
+  final String name;
+  final IconData icon;
+  final Function onClick;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Material(
+        color: Colors.green[900],
+        child: InkWell(
+          onTap: () {
+            onClick();
+          },
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            height: 100,
+            width: 150,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 24.0,
+                ),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
                   ),
                 ),
-              ),
+              ],
             ),
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
