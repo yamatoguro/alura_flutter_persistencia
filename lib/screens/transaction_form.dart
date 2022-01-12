@@ -9,6 +9,7 @@ import 'package:Bytebank/models/contact.dart';
 import 'package:Bytebank/models/transaction.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;
@@ -22,6 +23,8 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebclient _webclient = TransactionWebclient();
+  final String transactionId = const Uuid().v4();
+
   bool _processing = false;
 
   @override
@@ -84,7 +87,9 @@ class _TransactionFormState extends State<TransactionForm> {
                             final double? value =
                                 double.tryParse(_valueController.text);
                             final transactionCreated = Transaction(
-                                value: value, contact: widget.contact);
+                                id: transactionId,
+                                value: value,
+                                contact: widget.contact);
                             _save(transactionCreated, password, context);
                           },
                         ),

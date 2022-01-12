@@ -17,6 +17,7 @@ dependencies:
   http: ^0.13.4
   http_interceptor: ^1.0.2
   loading_overlay: ^0.3.0
+  uuid: ^3.0.5
 
 dev_dependencies:
   flutter_test:

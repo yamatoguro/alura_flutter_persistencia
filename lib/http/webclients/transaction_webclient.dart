@@ -33,14 +33,17 @@ class TransactionWebclient {
       Map<String, dynamic> resultJSON = jsonDecode(r.body);
       return Transaction.fromJson(resultJSON);
     } else {
-      throw HttpException(_statusCodeResponses[r.statusCode]!);
+      throw HttpException(
+        _statusCodeResponses[r.statusCode] ?? _statusCodeResponses[0]!,
+      );
     }
   }
 
   static final Map<int, String> _statusCodeResponses = {
     0: 'Unknown error',
     400: 'There was an error submitting transaction',
-    401: 'Authentication failed'
+    401: 'Authentication failed',
+    409: 'Transaction already exists'
   };
 }
 
