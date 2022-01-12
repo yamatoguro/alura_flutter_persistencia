@@ -7,6 +7,7 @@ import 'package:Bytebank/components/transaction_auth_dialog.dart';
 import 'package:Bytebank/http/webclients/transaction_webclient.dart';
 import 'package:Bytebank/models/contact.dart';
 import 'package:Bytebank/models/transaction.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:flutter/material.dart';
 
 class TransactionForm extends StatefulWidget {
@@ -21,9 +22,18 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebclient _webclient = TransactionWebclient();
+  bool _processing = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LoadingOverlay(
+        child: buildTransactionForm(context),
+        isLoading: _processing,
+        opacity: 0.7,
+        progressIndicator: const CircularProgressIndicator(),
+        color: Colors.green,
+      );
+
+  Widget buildTransactionForm(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('New transaction'),
@@ -92,17 +102,30 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void _save(Transaction t, String password, BuildContext context) async {
     try {
+      setState(() => _processing = true);
       Transaction tr = await _webclient.save(t, password, context);
       if (tr != null) {
-        _showMessage(context, true);
+        setState(() {
+          _processing = false;
+        });
+        await _showMessage(context, true);
         Navigator.pop(context);
       }
     } on HttpException catch (e) {
-      _showMessage(context, false, message: e.message);
+      setState(() {
+        _showMessage(context, false, message: e.message);
+        _processing = false;
+      });
     } on TimeoutException {
-      _showMessage(context, false, message: 'Timeout submitting transaction');
+      setState(() {
+        _showMessage(context, false, message: 'Timeout submitting transaction');
+        _processing = false;
+      });
     } catch (e) {
-      _showMessage(context, false);
+      setState(() {
+        _showMessage(context, false);
+        _processing = false;
+      });
     }
   }
 

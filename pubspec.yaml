@@ -16,6 +16,7 @@ dependencies:
   sqflite: ^2.0.1
   http: ^0.13.4
   http_interceptor: ^1.0.2
+  loading_overlay: ^0.3.0
 
 dev_dependencies:
   flutter_test:
