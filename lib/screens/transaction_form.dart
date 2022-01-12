@@ -91,29 +91,34 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   void _save(Transaction t, String password, BuildContext context) async {
-    final Transaction transaction = await _webclient
-        .save(t, password, context)
-        .catchError(
-          (e) => showDialog(
-            context: context,
-            builder: (dialogContext) => FailureDialog(e.message),
-          ),
-          test: (e) => e is HttpException,
-        )
-        .catchError(
-          (e) => showDialog(
-            context: context,
-            builder: (context) =>
-                FailureDialog('Timeout submitting transaction'),
-          ),
-          test: (e) => e is TimeoutException,
-        );
-    if (t != null) {
-      await showDialog(
-        context: context,
-        builder: (dialogContext) => SuccessDialog('Successful transaction'),
-      );
-      Navigator.pop(context);
+    try {
+      Transaction tr = await _webclient.save(t, password, context);
+      if (tr != null) {
+        _showMessage(context, true);
+        Navigator.pop(context);
+      }
+    } on HttpException catch (e) {
+      _showMessage(context, false, message: e.message);
+    } on TimeoutException {
+      _showMessage(context, false, message: 'Timeout submitting transaction');
+    } catch (e) {
+      _showMessage(context, false);
     }
+  }
+
+  Future<dynamic> _showMessage(
+    BuildContext context,
+    bool success, {
+    String message = 'Unknown error',
+  }) {
+    return (success)
+        ? showDialog(
+            context: context,
+            builder: (dialogContext) => SuccessDialog('Successful transaction'),
+          )
+        : showDialog(
+            context: context,
+            builder: (context) => FailureDialog(message),
+          );
   }
 }

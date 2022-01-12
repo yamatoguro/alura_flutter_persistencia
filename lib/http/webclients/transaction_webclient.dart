@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:Bytebank/components/response_dialog.dart';
 import 'package:Bytebank/http/interceptors/logging_interceptor.dart';
 import 'package:Bytebank/http/webclient.dart';
 import 'package:Bytebank/models/transaction.dart';
@@ -33,9 +32,9 @@ class TransactionWebclient {
     if (r.statusCode == 200) {
       Map<String, dynamic> resultJSON = jsonDecode(r.body);
       return Transaction.fromJson(resultJSON);
+    } else {
+      throw HttpException(_statusCodeResponses[r.statusCode]!);
     }
-
-    throw HttpException(_statusCodeResponses[r.statusCode]!);
   }
 
   static final Map<int, String> _statusCodeResponses = {
