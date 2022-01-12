@@ -13,7 +13,18 @@ class Progress extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const CircularProgressIndicator(),
-          Text(message),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              message,
+              style: const TextStyle(
+                fontSize: 32,
+                fontFamily: 'roboto',
+                color: Colors.white,
+                decoration: TextDecoration.none,
+              ),
+            ),
+          ),
         ],
       ),
     );

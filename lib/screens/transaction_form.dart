@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:Bytebank/components/progress.dart';
 import 'package:Bytebank/components/response_dialog.dart';
 import 'package:Bytebank/components/transaction_auth_dialog.dart';
 import 'package:Bytebank/http/webclients/transaction_webclient.dart';
@@ -32,7 +33,9 @@ class _TransactionFormState extends State<TransactionForm> {
         child: buildTransactionForm(context),
         isLoading: _processing,
         opacity: 0.7,
-        progressIndicator: const CircularProgressIndicator(),
+        progressIndicator: const Progress(
+          message: 'Sending...',
+        ),
         color: Colors.green,
       );
 
@@ -66,6 +69,7 @@ class _TransactionFormState extends State<TransactionForm> {
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: TextField(
+                  autofocus: false,
                   controller: _valueController,
                   style: const TextStyle(fontSize: 24.0),
                   decoration: const InputDecoration(labelText: 'Value'),
@@ -107,7 +111,11 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void _save(Transaction t, String password, BuildContext context) async {
     try {
-      setState(() => _processing = true);
+      FocusScope.of(context).requestFocus(new FocusNode());
+      setState(() {
+        _processing = true;
+      });
+      await Future.delayed(const Duration(seconds: 5));
       Transaction tr = await _webclient.save(t, password, context);
       if (tr != null) {
         setState(() {
