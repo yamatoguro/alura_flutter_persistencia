@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http/http.dart';
 
-class TransactionWebclient {
+class TransactionWebClient {
   Future<List<Transaction>> findAll() async {
     final Client client = InterceptedClient.build(
       interceptors: [LoggingInterceptor()],

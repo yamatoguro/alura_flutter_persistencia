@@ -1,10 +1,7 @@
+import 'package:Bytebank/components/container.dart';
+import 'package:Bytebank/models/name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-class NameCubit extends Cubit<String> {
-  NameCubit(String name) : super(name);
-  void change(String name) => emit(name);
-}
 
 class NameContainer extends StatelessWidget {
   const NameContainer({Key? key}) : super(key: key);
@@ -15,9 +12,7 @@ class NameContainer extends StatelessWidget {
   }
 }
 
-class NameView extends StatelessWidget {
-  NameView({Key? key}) : super(key: key);
-
+class NameView extends BlocContainer {
   final _nameController = TextEditingController();
 
   @override

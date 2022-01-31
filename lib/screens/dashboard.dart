@@ -1,12 +1,12 @@
+import 'package:Bytebank/components/container.dart';
+import 'package:Bytebank/models/name.dart';
 import 'package:Bytebank/screens/contacts_list.dart';
 import 'package:Bytebank/screens/name.dart';
 import 'package:Bytebank/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DashboardContainer extends StatelessWidget {
-  const DashboardContainer({Key? key}) : super(key: key);
-
+class DashboardContainer extends BlocContainer {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -72,12 +72,7 @@ class DashboardView extends StatelessWidget {
   }
 
   void _showContactsList(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ContactsList(),
-      ),
-    );
+    push(context, ContactsListContainer());
   }
 
   _showTransactionList(BuildContext context) {
@@ -89,17 +84,6 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-/*
-
-Navigator.push(context, MaterialPageRoute(builder: (context) {
-  return BlocProvider<MyBloc>.value(
-    value: BlocProvider.of<MyBloc>(context),
-    child: SecondScreen(context),
-  );
-}));
-
-
- */
   void _showChangeName(BuildContext blocContext) {
     Navigator.of(blocContext).push(
       MaterialPageRoute(
