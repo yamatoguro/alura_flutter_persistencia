@@ -1,9 +1,23 @@
+import 'package:Bytebank/components/container.dart';
+import 'package:Bytebank/models/name.dart';
 import 'package:Bytebank/screens/contacts_list.dart';
+import 'package:Bytebank/screens/name.dart';
 import 'package:Bytebank/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({
+class DashboardContainer extends BlocContainer {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => NameCubit('Iago'),
+      child: DashboardView(),
+    );
+  }
+}
+
+class DashboardView extends StatelessWidget {
+  const DashboardView({
     Key? key,
   }) : super(key: key);
 
@@ -11,7 +25,9 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: BlocBuilder<NameCubit, String>(
+          builder: (context, state) => Text('Welcome $state'),
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -21,26 +37,33 @@ class Dashboard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Image.asset('assets/images/bytebank_logo.png'),
           ),
-          SizedBox(
-            height: 120,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                Row(
-                  children: [
-                    _FeatureItem(
-                      name: 'Transfer',
-                      icon: Icons.monetization_on,
-                      onClick: () => _showContactsList(context),
-                    ),
-                    _FeatureItem(
-                      name: 'Transaction Feed',
-                      icon: Icons.description,
-                      onClick: () => _showTransactionList(context),
-                    ),
-                  ],
-                ),
-              ],
+          SingleChildScrollView(
+            child: SizedBox(
+              height: 120,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Row(
+                    children: [
+                      _FeatureItem(
+                        name: 'Transfer',
+                        icon: Icons.monetization_on,
+                        onClick: () => _showContactsList(context),
+                      ),
+                      _FeatureItem(
+                        name: 'Transaction Feed',
+                        icon: Icons.description,
+                        onClick: () => _showTransactionList(context),
+                      ),
+                      _FeatureItem(
+                        name: 'Change Name',
+                        icon: Icons.person_outline,
+                        onClick: () => _showChangeName(context),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -49,12 +72,7 @@ class Dashboard extends StatelessWidget {
   }
 
   void _showContactsList(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ContactsList(),
-      ),
-    );
+    push(context, ContactsListContainer());
   }
 
   _showTransactionList(BuildContext context) {
@@ -62,6 +80,17 @@ class Dashboard extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => TransactionsList(),
+      ),
+    );
+  }
+
+  void _showChangeName(BuildContext blocContext) {
+    Navigator.of(blocContext).push(
+      MaterialPageRoute(
+        builder: (context) => BlocProvider.value(
+          value: BlocProvider.of<NameCubit>(blocContext),
+          child: NameContainer(),
+        ),
       ),
     );
   }

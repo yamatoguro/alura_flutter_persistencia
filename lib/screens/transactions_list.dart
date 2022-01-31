@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class TransactionsList extends StatelessWidget {
   final List<Transaction> transactions = [];
-  final TransactionWebclient _webclient = TransactionWebclient();
+  final TransactionWebClient _webclient = TransactionWebClient();
 
   TransactionsList({Key? key}) : super(key: key);
 
@@ -23,7 +23,7 @@ class TransactionsList extends StatelessWidget {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return const Progress();
+              return Progress();
             case ConnectionState.active:
               break;
             case ConnectionState.done:
