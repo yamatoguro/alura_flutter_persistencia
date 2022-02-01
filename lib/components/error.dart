@@ -1,11 +1,9 @@
-import 'package:Bytebank/components/progress.dart';
 import 'package:flutter/material.dart';
 
 class ErrorView extends StatelessWidget {
-  final String message;
+  final String _message;
 
-  const ErrorView({Key? key, this.message = 'Unknown Error!'})
-      : super(key: key);
+  const ErrorView(this._message);
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +11,7 @@ class ErrorView extends StatelessWidget {
       appBar: AppBar(
         title: Text('Processing'),
       ),
-      body: Progress(
-        message: 'Sending...',
-      ),
+      body: Text(_message),
     );
   }
 }

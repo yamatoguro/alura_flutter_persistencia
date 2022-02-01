@@ -1,4 +1,5 @@
 import 'package:Bytebank/components/container.dart';
+import 'package:Bytebank/components/localization.dart';
 import 'package:Bytebank/models/name.dart';
 import 'package:Bytebank/screens/contacts_list.dart';
 import 'package:Bytebank/screens/name.dart';
@@ -23,6 +24,7 @@ class DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = DashboardViewI18N(context);
     return Scaffold(
       appBar: AppBar(
         title: BlocBuilder<NameCubit, String>(
@@ -46,17 +48,17 @@ class DashboardView extends StatelessWidget {
                   Row(
                     children: [
                       _FeatureItem(
-                        name: 'Transfer',
+                        name: i18n.transfer,
                         icon: Icons.monetization_on,
                         onClick: () => _showContactsList(context),
                       ),
                       _FeatureItem(
-                        name: 'Transaction Feed',
+                        name: i18n.trasaction_feed,
                         icon: Icons.description,
                         onClick: () => _showTransactionList(context),
                       ),
                       _FeatureItem(
-                        name: 'Change Name',
+                        name: i18n.change_name,
                         icon: Icons.person_outline,
                         onClick: () => _showChangeName(context),
                       ),
@@ -94,6 +96,19 @@ class DashboardView extends StatelessWidget {
       ),
     );
   }
+}
+
+class DashboardViewI18N extends ViewI18N {
+  DashboardViewI18N(BuildContext context) : super(context);
+
+  String get transfer =>
+      super.localize({'pt-br': 'Transferir', 'en': 'Transfer'});
+
+  String get trasaction_feed => super
+      .localize({'pt-br': 'Lista de Transferências', 'en': 'Transaction feed'});
+
+  String get change_name =>
+      super.localize({'pt-br': 'Mudar Nome', 'en': 'Change name'});
 }
 
 class _FeatureItem extends StatelessWidget {
