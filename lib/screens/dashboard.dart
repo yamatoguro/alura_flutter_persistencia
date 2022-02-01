@@ -11,22 +11,25 @@ class DashboardContainer extends BlocContainer {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => NameCubit('Iago'),
-      child: DashboardView(),
+      create: (_) => NameCubit("Iago"),
+      child: I18NLoadingContainer(
+        viewKey: 'dashboard',
+        creator: (messages) => DashboardView(DashboardViewLazyI18N(messages)),
+      ),
     );
   }
 }
 
 class DashboardView extends StatelessWidget {
-  const DashboardView({
-    Key? key,
-  }) : super(key: key);
+  final DashboardViewLazyI18N _i18n;
+
+  DashboardView(this._i18n);
 
   @override
   Widget build(BuildContext context) {
-    final i18n = DashboardViewI18N(context);
     return Scaffold(
       appBar: AppBar(
+        // misturando um blocbuilder (que é um observer de eventos) com UI
         title: BlocBuilder<NameCubit, String>(
           builder: (context, state) => Text('Welcome $state'),
         ),
@@ -34,35 +37,31 @@ class DashboardView extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.asset('assets/images/bytebank_logo.png'),
           ),
           SingleChildScrollView(
-            child: SizedBox(
+            child: Container(
               height: 120,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                children: [
-                  Row(
-                    children: [
-                      _FeatureItem(
-                        name: i18n.transfer,
-                        icon: Icons.monetization_on,
-                        onClick: () => _showContactsList(context),
-                      ),
-                      _FeatureItem(
-                        name: i18n.trasactionFeed,
-                        icon: Icons.description,
-                        onClick: () => _showTransactionList(context),
-                      ),
-                      _FeatureItem(
-                        name: i18n.changeName,
-                        icon: Icons.person_outline,
-                        onClick: () => _showChangeName(context),
-                      ),
-                    ],
+                children: <Widget>[
+                  _FeatureItem(
+                    name: _i18n.transfer,
+                    icon: Icons.monetization_on,
+                    onClick: () => _showContactsList(context),
+                  ),
+                  _FeatureItem(
+                    name: _i18n.transaction_feed,
+                    icon: Icons.description,
+                    onClick: () => _showTransactionsList(context),
+                  ),
+                  _FeatureItem(
+                    name: _i18n.change_name,
+                    icon: Icons.person_outline,
+                    onClick: () => _showChangeName(context),
                   ),
                 ],
               ),
@@ -73,17 +72,8 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  void _showContactsList(BuildContext context) {
-    push(context, ContactsListContainer());
-  }
-
-  _showTransactionList(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TransactionsList(),
-      ),
-    );
+  void _showContactsList(BuildContext blocContext) {
+    push(blocContext, ContactsListContainer());
   }
 
   void _showChangeName(BuildContext blocContext) {
@@ -96,19 +86,40 @@ class DashboardView extends StatelessWidget {
       ),
     );
   }
+
+  _showTransactionsList(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TransactionsList(),
+      ),
+    );
+  }
+}
+
+class DashboardViewLazyI18N {
+  final I18NMessages _messages;
+
+  DashboardViewLazyI18N(this._messages);
+
+  String get transfer => _messages.get("transfer");
+
+  // _ é para constante. defina se você vai usar também para não constante!
+  String get transaction_feed => _messages.get("transaction_feed");
+
+  String get change_name => _messages.get("change_name");
 }
 
 class DashboardViewI18N extends ViewI18N {
   DashboardViewI18N(BuildContext context) : super(context);
 
-  String get transfer =>
-      super.localize({'pt-br': 'Transferir', 'en': 'Transfer'});
+  String get transfer => localize({"pt-br": "Transferir", "en": "Transfer"});
 
-  String get trasactionFeed => super
-      .localize({'pt-br': 'Lista de Transferências', 'en': 'Transaction feed'});
+  // _ é para constante. defina se você vai usar também para não constante!
+  String get transaction_feed =>
+      localize({"pt-br": "Transações", "en": "Transaction Feed"});
 
-  String get changeName =>
-      super.localize({'pt-br': 'Mudar Nome', 'en': 'Change name'});
+  String get change_name =>
+      localize({"pt-br": "Mudar nome", "en": 'Change name'});
 }
 
 class _FeatureItem extends StatelessWidget {

@@ -12,7 +12,7 @@ class TransactionWebClient {
     final Client client = InterceptedClient.build(
       interceptors: [LoggingInterceptor()],
     );
-    final Response response = await client.get(Uri.parse(baseURL));
+    final Response response = await client.get(Uri.parse(transactionsURL));
     final List<dynamic> decodedJson = jsonDecode(response.body);
     final List<Transaction> transactions =
         decodedJson.map((e) => Transaction.fromJson(e)).toList();
@@ -22,7 +22,7 @@ class TransactionWebClient {
   Future<Transaction> save(
       Transaction t, String password, BuildContext context) async {
     Response r = await client.post(
-      Uri.parse(baseURL),
+      Uri.parse(transactionsURL),
       headers: {
         'Content-type': 'application/json',
         'password': password,
