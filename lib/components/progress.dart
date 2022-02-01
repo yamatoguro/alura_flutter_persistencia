@@ -29,7 +29,8 @@ class Progress extends StatelessWidget {
 }
 
 class ProgressView extends StatelessWidget {
-  ProgressView({Key? key}) : super(key: key);
+  final String message;
+  ProgressView({this.message = 'Sending...'});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class ProgressView extends StatelessWidget {
         title: Text('Processing'),
       ),
       body: Progress(
-        message: 'Sending...',
+        message: message,
       ),
     );
   }

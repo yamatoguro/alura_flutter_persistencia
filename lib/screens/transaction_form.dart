@@ -105,9 +105,9 @@ class TransactionFormStaless extends StatelessWidget {
         return ProgressView();
       }
       if (state is FatalErrorFormState) {
-        return ErrorView(message: state._message);
+        return ErrorView(state._message);
       }
-      return const ErrorView();
+      return ErrorView('Unknown Error!');
     });
   }
 
