@@ -53,12 +53,12 @@ class DashboardView extends StatelessWidget {
                         onClick: () => _showContactsList(context),
                       ),
                       _FeatureItem(
-                        name: i18n.trasaction_feed,
+                        name: i18n.trasactionFeed,
                         icon: Icons.description,
                         onClick: () => _showTransactionList(context),
                       ),
                       _FeatureItem(
-                        name: i18n.change_name,
+                        name: i18n.changeName,
                         icon: Icons.person_outline,
                         onClick: () => _showChangeName(context),
                       ),
@@ -104,10 +104,10 @@ class DashboardViewI18N extends ViewI18N {
   String get transfer =>
       super.localize({'pt-br': 'Transferir', 'en': 'Transfer'});
 
-  String get trasaction_feed => super
+  String get trasactionFeed => super
       .localize({'pt-br': 'Lista de Transferências', 'en': 'Transaction feed'});
 
-  String get change_name =>
+  String get changeName =>
       super.localize({'pt-br': 'Mudar Nome', 'en': 'Change name'});
 }
 

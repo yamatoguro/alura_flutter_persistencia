@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,9 +11,13 @@ class LocalizationContainer extends BlocContainer {
 
   @override
   Widget build(BuildContext context) {
+    // return BlocProvider.value(
+    //   value: CurrentLocaleCubit(),
+    //   child: this.child,
+    // );
     return BlocProvider<CurrentLocaleCubit>(
       create: (context) => CurrentLocaleCubit(),
-      child: child,
+      child: this.child,
     );
   }
 }
@@ -27,5 +33,9 @@ class ViewI18N {
     this.language = BlocProvider.of<CurrentLocaleCubit>(context).state;
   }
 
-  localize(Map<String, String> map) => map[language];
+  localize(Map<String, String> map) {
+    assert(map != null);
+    assert(map.containsKey(language));
+    return map[language];
+  }
 }
