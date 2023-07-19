@@ -1,16 +1,14 @@
-# alura_persistence
+# Projeto Alura Formação Flutter 
+Rápida descrição do objetivo de fazer esse projeto
 
-A new Flutter project.
+| :placard: Vitrine.Dev |     |
+| -------------  | --- |
+| :sparkles: Nome        | **Projeto Flutter para acompannhar a Formação Flutter**
+| :label: Tecnologias | flutter, dart
 
-## Getting Started
+<!-- Inserir imagem com a #vitrinedev ao final do link -->
+<!-- ![](https://via.placeholder.com/1200x500.png?text=imagem+lindona+do+meu+projeto#vitrinedev) -->
 
-This project is a starting point for a Flutter application.
+## Detalhes do projeto
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Este projeto é um acompanhamento da formação flutter que participei na época em que estava estudando flutter.
